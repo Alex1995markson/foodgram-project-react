@@ -9,6 +9,12 @@ from tags.models import Tag
 
 
 class DoubleSearchBackend(SearchFilter):
+    """
+    Бекенд для фильтрации с выводом в заданой последовательности.
+
+    Поддерживает примущества базавого фильтра, но выводит
+    результаты в последовательности указанной в search_fields
+    """
     def filter_queryset(self, request, queryset, view):
         search_fields = self.get_search_fields(view, request)
         search_terms = self.get_search_terms(request)
@@ -35,6 +41,18 @@ class DoubleSearchBackend(SearchFilter):
 
 
 class RecipeFilterSet(FilterSet):
+    """
+    Фильтерсет для кастомной фильтрации.
+    Фильтрация идет по следующим query праметрам:
+    - author: указывается id автора рецепта
+    - tags: указывается slug тега(ов)
+    - is_favorited: true, выводит список рецептов из избранного
+    - is_in_shopping_cart: true, выводит список рецептов из корзины
+    Note:
+    --------
+    is_favorited и is_in_shopping_cart - самостоятельные параметры, совместное
+    использование, в том числе с author приводит к возвращениее HTTP404_BAD_REQUEST
+    """
     tags = filters.ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),
         to_field_name='slug',
@@ -50,7 +68,7 @@ class RecipeFilterSet(FilterSet):
     def check_is_in_favorited(self, queryset, name, value):
         is_favorited = self.request.query_params.get('is_favorited')
         if is_favorited == '1' or is_favorited == 'true':
-            favorite_recipes = self.request.user.marked_recipes.favorited_recipe.all()
+            favorite_recipes = self.request.user.marked_recipes.fovorited_recipe.all()
             return queryset.filter(
                 id__in=[recipe.id for recipe in favorite_recipes]
             )

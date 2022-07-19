@@ -7,6 +7,3 @@ from .models import Ingredient
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('name', 'measurement_unit')
     search_fields = ('name',)
-    list_filter = ('name',)
-
-    save_on_top = True

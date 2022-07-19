@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 from recipes.models import Recipe
 
-from utils.fun_setting import check_the_occurrence
+from utils.generalizing_functions import check_the_occurrence
 
 User = get_user_model()
 

@@ -13,7 +13,7 @@ from tags.serializers import TagSerializer
 from users.serializers import UserSerializer
 
 from .models import IngredientsList, Recipe
-from utils.fun_setting import check_the_occurrence
+from utils.generalizing_functions import check_the_occurrence
 
 User = get_user_model()
 
@@ -48,7 +48,12 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         return check_the_occurrence(obj,
-                                    'marked_recipes__favorited_recipe',
+                                    'marked_recipes__fovorited_recipe',
+                                    self)
+
+    def get_is_in_shopping_cart(self, obj):
+        return check_the_occurrence(obj,
+                                    'marked_recipes__recipe_for_download',
                                     self)
 
 
@@ -136,11 +141,16 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def _get_tags(self, validated_data: dict) -> list:
+        """
+        Сформировать список тегов.
+        """
         return [get_object_or_404(Tag, pk=id_tag)
                 for id_tag in validated_data.pop('tags')]
 
     def _get_ingredients(self, validated_data: dict) -> list:
-
+        """
+        Сформировать список ингредиентов.
+        """
         return [{'object': get_object_or_404(Ingredient, pk=ingredient['id']),
                 'amount': int(ingredient['amount'])}
                 for ingredient in validated_data.pop('ingredients')]
@@ -148,7 +158,9 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     def _add_ingredients_to_recipe(self,
                                    recipe: object,
                                    ingredients: list) -> None:
-
+        """
+        Добавить в рецепт ингредиенты.
+        """
         for ingredient in ingredients:
             IngredientsList.objects.create(
                 recipe=recipe,

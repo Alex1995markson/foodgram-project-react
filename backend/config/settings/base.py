@@ -136,8 +136,3 @@ ERROR_MESSAGE = {
     'unique_query_params': ('Не возможно фильтровать по автору и одному из'
                             ' is_in_shopping_cart или is_favorited одновременно'),
 }
-
-СONST_LENGTH_MODEL = {
-    'MAX_LEN_RECIPES_CHARFIELD': 60,
-    'MAX_LEN_RECIPES_TEXTFIELD': 255
-}

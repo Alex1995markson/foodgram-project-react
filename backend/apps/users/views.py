@@ -8,8 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from utils.fun_setting import (check_the_occurrence,
-                               send_bad_request_response)
+from utils.generalizing_functions import (check_the_occurrence,
+                                          send_bad_request_response)
 from utils.mixins import DisableUslessDjoserActionMixin
 
 User = get_user_model()

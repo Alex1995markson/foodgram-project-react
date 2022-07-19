@@ -27,4 +27,4 @@ class RecipeAdmin(admin.ModelAdmin):
 @admin.register(MarkedUserRecipes)
 class MarkedRecipeAdmin(admin.ModelAdmin):
     list_display = ('user',)
-    filter_horizontal = ('fovorited_recipe',)
+    filter_horizontal = ('fovorited_recipe', 'recipe_for_download')

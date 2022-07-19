@@ -63,3 +63,4 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ('email', 'name', 'username')
     ordering = ('email',)
+    filter_horizontal = ('groups', 'user_permissions', 'subscriptions')
