@@ -12,7 +12,8 @@ router_v1 = routers.DefaultRouter()
 router_v1.register(r'api/tags', TagsViewSet, basename='tags_api')
 router_v1.register(r'api/users', UserViewSet, basename='users_api')
 router_v1.register(r'api/recipes', RecipeViewSet, basename='recipes_api')
-router_v1.register(r'api/ingredients', IngredientsViewSet, basename='ingredients_api')
+router_v1.register(r'api/ingredients', IngredientsViewSet,
+                   basename='ingredients_api')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
