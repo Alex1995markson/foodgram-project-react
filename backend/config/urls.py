@@ -2,11 +2,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-
-from rest_framework import routers
-
 from ingredients.views import IngredientsViewSet
 from recipes.views import RecipeViewSet
+from rest_framework import routers
 from tags.views import TagsViewSet
 from users.views import UserViewSet
 
