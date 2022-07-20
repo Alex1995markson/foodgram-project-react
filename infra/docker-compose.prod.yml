@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   nginx:
-    image: an.matsenko/frontend_foodgram:latest
+    image: alexmarkson/frontend_foodgram:latest
     ports:
       - 80:80
     volumes:
@@ -24,7 +24,7 @@ services:
       - foodgram_network
 
   web:
-    image: an.matsenko/backend_foodgram:latest
+    image: alexmarkson/backend_foodgram:latest
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ../data:/usr/src/app/data
