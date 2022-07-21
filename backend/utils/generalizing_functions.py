@@ -1,7 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
-
+# from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
+
+User = get_user_model()
 
 
 def check_the_occurrence(ckecked_obj: object,
@@ -43,14 +45,12 @@ def check_the_occurrence(ckecked_obj: object,
     try:
         for field in related_field.split('__'):
             requested_field = getattr(requested_field, field)
-    except ObjectDoesNotExist:
+    except User.DoesNotExist:
         return False
 
     data = getattr(requested_field, 'all')()
 
-    if ckecked_obj in data:
-        return True
-    return False
+    return ckecked_obj in data
 
 
 def send_bad_request_response(message: str) -> object:

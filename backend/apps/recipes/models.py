@@ -8,6 +8,7 @@ User = get_user_model()
 
 
 class Recipe(models.Model):
+    
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -29,7 +30,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipes_tags',
+        related_name='recipes',
         blank=True,
         verbose_name='Теги рецепта'
     )
@@ -66,8 +67,22 @@ class IngredientsList(models.Model):
     )
     amount = models.PositiveSmallIntegerField()
 
+    class Meta:
+        ordering = ('-recipe',)
+        verbose_name = 'Список ингридента'
+        verbose_name_plural = 'Список ингридентов'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredients'),
+                name='unique_for_ingredient'
+            ),
+        )
 
-class MarkedUserRecipes(models.Model):
+    def __str__(self) -> str:
+        return f'{self.recipe} - {self.ingredients}'
+
+
+class MarkedUserRecipe(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -90,6 +105,12 @@ class MarkedUserRecipes(models.Model):
     class Meta:
         verbose_name = 'Отмеченый рецепт'
         verbose_name_plural = 'Отмеченные рецепты'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'fovorited_recipe', 'recipe_for_download'),
+                name='unique_for_user_marked_recipe'
+            ),
+        )
 
     def __str__(self) -> str:
         return (f'{self.id} | {self.user} | '

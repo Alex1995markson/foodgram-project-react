@@ -8,7 +8,7 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from .models import MarkedUserRecipes, Recipe
+from .models import MarkedUserRecipe, Recipe
 from .srializers import (CreateRecipeSerializer, RecipeSerializer,
                          ShortRecipeSerializer)
 from utils.file_creators import create_ingredients_list_pdf
@@ -56,12 +56,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Добавляет в нужный список выбранный рецеп, следит за наличием
         данного рецепта, в случае наличия отсылает соответсвующий ответ.
         """
-        marked_recipes, _ = MarkedUserRecipes.objects.get_or_create(
+        marked_recipes, _ = MarkedUserRecipe.objects.get_or_create(
                                                             user=request.user
                                                         )
         recipe = self.get_object()
 
-        if request.path.split('/')[-2] == 'favorite':
+        if request.resolver_match.url_name == 'favorite':
             if check_the_occurrence(recipe,
                                     'fovorited_recipe',
                                     marked_recipes):
@@ -92,12 +92,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Удаляет из нужнгого списка выбранный рецеп, следит за наличием
         данного рецепта, в случае отсутствия отсылает соответсвующий ответ.
         """
-        marked_recipes, _ = MarkedUserRecipes.objects.get_or_create(
+        marked_recipes, _ = MarkedUserRecipe.objects.get_or_create(
                                                             user=request.user
                                                         )
         recipe = self.get_object()
 
-        if request.path.split('/')[-2] == 'favorite':
+        if request.resolver_match.url_name == 'favorite':
             if not check_the_occurrence(recipe,
                                         'fovorited_recipe',
                                         marked_recipes):
@@ -144,7 +144,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             dict: словарь ингредиентов ввида:
                 {имя (единица измерения): колличество}
         """
-        ingredient_list = {}
+        ingredient_for_buy = {}
 
         for recipe in shopping_cart:
             ingredients = recipe.ingredients.through.objects.filter(
@@ -154,11 +154,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 key = (f'{ingredient.ingredients.name} '
                        f'({ingredient.ingredients.measurement_unit})')
                 try:
-                    ingredient_list[key] += ingredient.amount
+                    ingredient_for_buy[key] += ingredient.amount
                 except KeyError:
-                    ingredient_list[key] = ingredient.amount
+                    ingredient_for_buy[key] = ingredient.amount
 
-        return ingredient_list
+        return ingredient_for_buy
 
     def _send_file_response(self, ingredient_list: dict) -> object:
         """

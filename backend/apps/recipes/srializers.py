@@ -115,16 +115,16 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        super().update(instance, validated_data)
         tags = self._get_tags(validated_data)
         ingredients = self._get_ingredients(validated_data)
 
-        instance.name = validated_data.get('name', instance.name)
-        instance.text = validated_data.get('text', instance.text)
-        instance.cooking_time = validated_data.get('cooking_time',
-                                                   instance.cooking_time)
-        instance.image = validated_data.get('image', instance.image)
-        instance.save()
-
+        # instance.name = validated_data.get('name', instance.name)
+        # instance.text = validated_data.get('text', instance.text)
+        # instance.cooking_time = validated_data.get('cooking_time',
+        #                                            instance.cooking_time)
+        # instance.image = validated_data.get('image', instance.image)
+        # instance.save()
         instance.tags.clear()
         instance.tags.add(*tags)
 
@@ -161,12 +161,20 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         """
         Добавить в рецепт ингредиенты.
         """
-        for ingredient in ingredients:
-            IngredientsList.objects.create(
+        # for ingredient in ingredients:
+        #     IngredientsList.objects.create(
+        #         recipe=recipe,
+        #         ingredients=ingredient.get('object'),
+        #         amount=ingredient.get('amount')
+        #     )
+        IngredientsList.objects.bulk_create(
+            [IngredientsList(
                 recipe=recipe,
                 ingredients=ingredient.get('object'),
                 amount=ingredient.get('amount')
-            )
+            ) for ingredient in ingredients]
+        )
+
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):

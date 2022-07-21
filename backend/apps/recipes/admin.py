@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import IngredientsList, MarkedUserRecipes, Recipe
+from .models import IngredientsList, MarkedUserRecipe, Recipe
 
 
 class IngredientsListInline(admin.TabularInline):
@@ -24,7 +24,7 @@ class RecipeAdmin(admin.ModelAdmin):
                                                    'добавлений в избранное')
 
 
-@admin.register(MarkedUserRecipes)
+@admin.register(MarkedUserRecipe)
 class MarkedRecipeAdmin(admin.ModelAdmin):
     list_display = ('user',)
     filter_horizontal = ('fovorited_recipe', 'recipe_for_download')
