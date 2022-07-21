@@ -5,6 +5,6 @@
 # H306  : imports not in alphabetical order
 ignore = H903, E266, D203, H306
 exclude = .git,
-          */migrations/*
+          ./backend/apps/***s/migrations/*
 max-complexity = 10
 max_line_length = 120
