@@ -92,6 +92,7 @@ jobs:
           host: ${{ secrets.CLOUD_HOST }}
           username: ${{ secrets.CLOUD_HOST_USER }}
           key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           source: data/, infra/docker-compose.prod.yml, infra/nginx.prod.conf
           target: .
           overwrite: true
@@ -101,6 +102,7 @@ jobs:
           host: ${{ secrets.CLOUD_HOST }}
           username: ${{ secrets.CLOUD_HOST_USER }}
           key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             sudo rm -f .env
             touch .env
