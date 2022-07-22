@@ -18,26 +18,20 @@ from utils.generalizing_functions import check_the_occurrence
 User = get_user_model()
 
 
-class IngredientsListSerializer(serializers.ModelSerializer):
-    ingredients = IngredientSerializer()
-
+class IngredientsListSerializer(serializers.ModelSerializer): # change
     class Meta:
         model = IngredientsList
         fields = ('ingredients', 'amount')
 
     def to_representation(self, instance):
-        return {
-            'id': instance.ingredients.id,
-            'name': instance.ingredients.name,
-            'measurement_unit': instance.ingredients.measurement_unit,
-            'amount': instance.amount
-        }
+        serializer = IngredientSerializer(instance.ingredients)
+        return {**serializer.data, 'amount': instance.amount}
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     author = UserSerializer(read_only=True)
-    ingredients = IngredientsListSerializer(source='through_recipe', many=True)
+    ingredients = IngredientsListSerializer(source='through_recipes', many=True) #changed
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     publication_date = serializers.DateTimeField(write_only=True)
@@ -114,24 +108,17 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
         return recipe
 
-    def update(self, instance, validated_data):
-        super().update(instance, validated_data)
+    def update(self, instance, validated_data): # changed
         tags = self._get_tags(validated_data)
         ingredients = self._get_ingredients(validated_data)
-
-        # instance.name = validated_data.get('name', instance.name)
-        # instance.text = validated_data.get('text', instance.text)
-        # instance.cooking_time = validated_data.get('cooking_time',
-        #                                            instance.cooking_time)
-        # instance.image = validated_data.get('image', instance.image)
-        # instance.save()
+       
         instance.tags.clear()
         instance.tags.add(*tags)
 
         instance.ingredients.clear()
         self._add_ingredients_to_recipe(instance, ingredients)
 
-        return instance
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         serializer = RecipeSerializer(
@@ -161,21 +148,13 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         """
         Добавить в рецепт ингредиенты.
         """
-        # for ingredient in ingredients:
-        #     IngredientsList.objects.create(
-        #         recipe=recipe,
-        #         ingredients=ingredient.get('object'),
-        #         amount=ingredient.get('amount')
-        #     )
-        IngredientsList.objects.bulk_create(
-            [IngredientsList(
+        IngredientsList.objects.bulk_create([    # changed
+            IngredientsList(
                 recipe=recipe,
                 ingredients=ingredient.get('object'),
                 amount=ingredient.get('amount')
-            ) for ingredient in ingredients]
-        )
-
-
+            ) for ingredient in ingredients
+        ])
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
     class Meta:

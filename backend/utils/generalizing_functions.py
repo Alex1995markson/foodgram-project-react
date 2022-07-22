@@ -1,9 +1,7 @@
-# from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import status
 from rest_framework.response import Response
-
-User = get_user_model()
 
 
 def check_the_occurrence(ckecked_obj: object,
@@ -32,23 +30,19 @@ def check_the_occurrence(ckecked_obj: object,
     """
     try:
         user = obj.context.get('request').user
-    except AttributeError:
-        user = obj
-
-    try:
         if user.is_anonymous:
             return False
+        object_for_search = user
     except AttributeError:
-        pass
+        object_for_search = obj
 
-    requested_field = user
     try:
         for field in related_field.split('__'):
-            requested_field = getattr(requested_field, field)
-    except User.DoesNotExist:
+            object_for_search = getattr(object_for_search, field)
+    except object_for_search.DoesNotExist:
         return False
 
-    data = getattr(requested_field, 'all')()
+    data = getattr(object_for_search, 'all')()
 
     return ckecked_obj in data
 

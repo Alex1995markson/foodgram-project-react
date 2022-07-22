@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import FileResponse
-
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -8,7 +8,7 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from .models import MarkedUserRecipe, Recipe
+from .models import MarkedUserRecipes, Recipe
 from .srializers import (CreateRecipeSerializer, RecipeSerializer,
                          ShortRecipeSerializer)
 from utils.file_creators import create_ingredients_list_pdf
@@ -56,12 +56,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Добавляет в нужный список выбранный рецеп, следит за наличием
         данного рецепта, в случае наличия отсылает соответсвующий ответ.
         """
-        marked_recipes, _ = MarkedUserRecipe.objects.get_or_create(
+        marked_recipes, _ = MarkedUserRecipes.objects.get_or_create(
                                                             user=request.user
                                                         )
         recipe = self.get_object()
 
-        if request.resolver_match.url_name == 'favorite':
+        if request.resolver_match.url_name == 'recipes_api-favorite':
             if check_the_occurrence(recipe,
                                     'fovorited_recipe',
                                     marked_recipes):
@@ -92,12 +92,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Удаляет из нужнгого списка выбранный рецеп, следит за наличием
         данного рецепта, в случае отсутствия отсылает соответсвующий ответ.
         """
-        marked_recipes, _ = MarkedUserRecipe.objects.get_or_create(
+        marked_recipes, _ = MarkedUserRecipes.objects.get_or_create(
                                                             user=request.user
                                                         )
         recipe = self.get_object()
 
-        if request.resolver_match.url_name == 'favorite':
+        if request.path.split('/')[-2] == 'favorite':
             if not check_the_occurrence(recipe,
                                         'fovorited_recipe',
                                         marked_recipes):
@@ -123,8 +123,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request, *args, **kwargs):
         shopping_cart = request.user.marked_recipes.recipe_for_download.all()
-        ingredient_list = self._get_ingredient_list(shopping_cart)
-        return self._send_file_response(ingredient_list)
+        ingredients = self._get_ingredient_list(shopping_cart)
+        return self._send_file_response(ingredients)
 
     def _get_ingredient_list(self, shopping_cart: list) -> dict:
         """
@@ -144,37 +144,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
             dict: словарь ингредиентов ввида:
                 {имя (единица измерения): колличество}
         """
-        ingredient_for_buy = {}
+        return {
+            f'{ingredient} ({measurement_unit})': amount 
+                for ingredient, measurement_unit, amount in 
+                    Recipe.ingredients.through.objects
+                        .filter(recipe__in=shopping_cart)
+                        .values_list('ingredients__name', 'ingredients__measurement_unit')
+                        .annotate(amount=Sum('amount'))
+        }
 
-        for recipe in shopping_cart:
-            ingredients = recipe.ingredients.through.objects.filter(
-                                                                recipe=recipe
-                                                            )
-            for ingredient in ingredients:
-                key = (f'{ingredient.ingredients.name} '
-                       f'({ingredient.ingredients.measurement_unit})')
-                try:
-                    ingredient_for_buy[key] += ingredient.amount
-                except KeyError:
-                    ingredient_for_buy[key] = ingredient.amount
-
-        return ingredient_for_buy
-
-    def _send_file_response(self, ingredient_list: dict) -> object:
+    def _send_file_response(self, ingredients: dict) -> object:
         """
         Отправить свормированый файл.
 
-        Формирует файл(pdf) на онсове ingredient_list и отправляет его
+        Формирует файл(pdf) на онсове ingredients и отправляет его
 
         ------
         Параметры:
-            ingredient_list: dict - словарь ингредиентов ввида:
+            ingredients: dict - словарь ингредиентов ввида:
                 {имя (единица измерения): колличество}
         -----
         Выходное значение:
             object - FileResponse
         """
-        file_with_ingredients = create_ingredients_list_pdf(ingredient_list)
+        file_with_ingredients = create_ingredients_list_pdf(ingredients)
         return FileResponse(
             file_with_ingredients,
             as_attachment=True,

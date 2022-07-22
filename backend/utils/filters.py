@@ -68,7 +68,7 @@ class RecipeFilterSet(FilterSet):
     def check_is_in_favorited(self, queryset, name, value):
         is_favorited = self.request.query_params.get('is_favorited')
         if is_favorited == '1' or is_favorited == 'true':
-            favorite_recipes = self.request.user.marked_recipes.fovorited_recipe.value_list('id')
+            favorite_recipes = self.request.user.marked_recipes.fovorited_recipe.values_list('id')
             return queryset.filter(
                 id__in=favorite_recipes
             )
@@ -77,7 +77,7 @@ class RecipeFilterSet(FilterSet):
     def check_is_in_shopping_cart(self, queryset, name, value):
         is_in_shopping_cart = self.request.query_params.get('is_in_shopping_cart')
         if is_in_shopping_cart == '1' or is_in_shopping_cart == 'true':
-            recipes_for_download = self.request.user.marked_recipes.recipe_for_download.value_list('id')
+            recipes_for_download = self.request.user.marked_recipes.recipe_for_download.values_list('id')
             return queryset.filter(
                 id__in=recipes_for_download
             )

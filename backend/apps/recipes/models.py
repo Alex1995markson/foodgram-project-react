@@ -8,7 +8,6 @@ User = get_user_model()
 
 
 class Recipe(models.Model):
-    
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -30,7 +29,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipes',
+        related_name='recipes',  # changed
         blank=True,
         verbose_name='Теги рецепта'
     )
@@ -57,7 +56,7 @@ class Recipe(models.Model):
 class IngredientsList(models.Model):
     recipe = models.ForeignKey(
         Recipe,
-        related_name='through_recipe',
+        related_name='through_recipes', # changed
         on_delete=models.CASCADE
     )
     ingredients = models.ForeignKey(
@@ -67,22 +66,8 @@ class IngredientsList(models.Model):
     )
     amount = models.PositiveSmallIntegerField()
 
-    class Meta:
-        ordering = ('-recipe',)
-        verbose_name = 'Список ингридента'
-        verbose_name_plural = 'Список ингридентов'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('recipe', 'ingredients'),
-                name='unique_for_ingredient'
-            ),
-        )
 
-    def __str__(self) -> str:
-        return f'{self.recipe} - {self.ingredients}'
-
-
-class MarkedUserRecipe(models.Model):
+class MarkedUserRecipes(models.Model):  # тут пизда в говне!
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -105,12 +90,6 @@ class MarkedUserRecipe(models.Model):
     class Meta:
         verbose_name = 'Отмеченый рецепт'
         verbose_name_plural = 'Отмеченные рецепты'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user', 'fovorited_recipe', 'recipe_for_download'),
-                name='unique_for_user_marked_recipe'
-            ),
-        )
 
     def __str__(self) -> str:
         return (f'{self.id} | {self.user} | '

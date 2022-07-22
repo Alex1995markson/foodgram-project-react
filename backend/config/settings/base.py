@@ -61,21 +61,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-            'django.contrib.auth. \
-            password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth. \
-        password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth. \
-        password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth. \
-        password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -122,10 +117,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_FILTER_BACKENDS':
-        ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_PAGINATION_CLASS':
-        'utils.paginations.PageNumberWithPageSizeControllPagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'utils.paginations.PageNumberWithPageSizeControllPagination',
     'PAGE_SIZE': 20,
     'SEARCH_PARAM': 'name',
 }
@@ -141,5 +134,5 @@ ERROR_MESSAGE = {
     'both_query_params': ('Не возможно фильтровать по is_in_shopping_cart и'
                           'is_favorited одновременно'),
     'unique_query_params': ('Не возможно фильтровать по автору и одному из'
-                            '_shopping_cart or is_favorited одновременно'),
+                            ' is_in_shopping_cart или is_favorited одновременно'),
 }

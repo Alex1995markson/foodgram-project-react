@@ -11,14 +11,14 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 
-def create_ingredients_list_pdf(ingredient_list: Dict[str, int]):
+def create_ingredients_list_pdf(ingredients: Dict[str, int]):
     """Создать пдф файл со списком ингредиентов.
 
-     Формирует файл(pdf) на онсове ingredient_list.
+     Формирует файл(pdf) на онсове ingredients.
 
         ------
         Параметры:
-            ingredient_list:  Dict[str, int] - словарь ингредиентов ввида:
+            ingredients:  Dict[str, int] - словарь ингредиентов ввида:
                 {имя (единица измерения): колличество}
         -----
         Выходное значение:
@@ -44,7 +44,7 @@ def create_ingredients_list_pdf(ingredient_list: Dict[str, int]):
     p.drawString(6.5 * cm, margin_top, 'Общий список ингредиентов!')
     p.setFontSize(16)
 
-    for ingredient, amount in ingredient_list.items():
+    for ingredient, amount in ingredients.items():
         p.drawString(
             left_margin,
             margint_top_header,
