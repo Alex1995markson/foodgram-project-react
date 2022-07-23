@@ -3,6 +3,19 @@ from django.db import models
 
 
 class User(AbstractUser):
+    """Настроенная под приложение `Foodgram` модель пользователя.
+    При создании пользователя все поля обязательны для заполнения.
+    Attributes:
+        first_name(str):
+            Реальное имя пользователя.
+        last_name(str):
+            Реальная фамилия пользователя.
+        email(str):
+            Адрес email пользователя.
+            Проверка формата производится внутри Dlango.
+        subscribes(int):
+            Ссылки на id связанных пользователей.
+    """
     first_name = models.CharField(
         max_length=50,
         verbose_name='Имя'

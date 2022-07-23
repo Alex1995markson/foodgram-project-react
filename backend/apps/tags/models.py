@@ -3,6 +3,20 @@ from django.db import models
 
 
 class Tag(models.Model):
+    """Тэги для рецептов.
+    Связано с моделью Recipe через М2М.
+    Attributes:
+        name(str):
+            Название тэга.
+        color(str):
+            Цвет тэга в HEX-кодировке.
+        slug(str):
+            Те же правила, что и для атрибута `name`, но для корректной работы
+            с фронтэндом следует заполнять латинскими буквами.
+    Example:
+        Tag('Завтрак', '#01AB89', 'breakfirst')
+        Tag('Завтрак', '#01AB89', 'zavtrak')
+    """
     name = models.CharField(
         max_length=200,
         unique=True,

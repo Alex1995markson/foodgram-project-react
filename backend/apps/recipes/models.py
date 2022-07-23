@@ -8,6 +8,28 @@ User = get_user_model()
 
 
 class Recipe(models.Model):
+    """Модель для рецептов.
+    Основная модель приложения описывающая рецепты.
+    Attributes:
+        author(int):
+            Автор рецепта. Связан с моделю User через ForeignKey.
+        name(str):
+            Название рецепта. Установлены ограничения по длине.
+        image(str):
+            Изображение рецепта. Указывает путь к изображению.
+        text(str):
+            Описание рецепта. Установлены ограничения по длине.
+        cooking_time(int):
+            Время приготовления рецепта.
+        tags(int):
+            Связь M2M с моделью Tag.
+        ingredients(int):
+            Связь M2M с моделью IngredientsList.
+            Связь создаётся посредством модели
+            IngredientsList с указанием количества ингридиента.
+        pub_date(datetime):
+            Дата добавления рецепта. Прописывается автоматически.
+    """
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -29,7 +51,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipes',  # changed
+        related_name='recipes',
         blank=True,
         verbose_name='Теги рецепта'
     )
@@ -54,6 +76,16 @@ class Recipe(models.Model):
 
 
 class IngredientsList(models.Model):
+    """Количество ингридиентов в блюде.
+    Модель связывает Recipe и Ingredient с указанием количества ингридиента.
+    Attributes:
+        recipe(int):
+            Связаный рецепт. Связь через ForeignKey.
+        ingredients(int):
+            Связаный ингридиент. Связь через ForeignKey.
+        amount(int):
+            Количиства ингридиента в рецепте.
+    """
     recipe = models.ForeignKey(
         Recipe,
         related_name='through_recipes',
@@ -68,6 +100,15 @@ class IngredientsList(models.Model):
 
 
 class MarkedUserRecipes(models.Model):
+    """Отмеченные пользователем рецепты
+    Attributes:
+        user(int):
+            Пользователь, который добавил рецепт.
+        favorited_recipe(int):
+            Любимый рецепт пользователя через M2M
+        recipe_for_download(int):
+            Рецепты для скачивания через M2M
+    """
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
