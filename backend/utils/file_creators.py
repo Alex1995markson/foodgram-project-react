@@ -25,8 +25,8 @@ def create_ingredients_list_pdf(ingredients: Dict[str, int]):
             указатель на буфер с фалом
     """
     reportlab.rl_config.TTFSearchPath.append(
-                str(settings.BASE_DIR) + '/utils/fonts/'
-            )
+        str(settings.BASE_DIR) + '/utils/fonts/'
+    )
     pdfmetrics.registerFont(TTFont('Roboto', 'Roboto.ttf'))
 
     buffer = io.BytesIO()

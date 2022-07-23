@@ -18,7 +18,7 @@ from utils.generalizing_functions import check_the_occurrence
 User = get_user_model()
 
 
-class IngredientsListSerializer(serializers.ModelSerializer): # change
+class IngredientsListSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientsList
         fields = ('ingredients', 'amount')
@@ -31,7 +31,8 @@ class IngredientsListSerializer(serializers.ModelSerializer): # change
 class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     author = UserSerializer(read_only=True)
-    ingredients = IngredientsListSerializer(source='through_recipes', many=True) #changed
+    ingredients = IngredientsListSerializer(source='through_recipes',
+                                            many=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     publication_date = serializers.DateTimeField(write_only=True)
@@ -108,10 +109,10 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
         return recipe
 
-    def update(self, instance, validated_data): # changed
+    def update(self, instance, validated_data):
         tags = self._get_tags(validated_data)
         ingredients = self._get_ingredients(validated_data)
-       
+
         instance.tags.clear()
         instance.tags.add(*tags)
 
@@ -148,13 +149,14 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         """
         Добавить в рецепт ингредиенты.
         """
-        IngredientsList.objects.bulk_create([    # changed
+        IngredientsList.objects.bulk_create([
             IngredientsList(
                 recipe=recipe,
                 ingredients=ingredient.get('object'),
                 amount=ingredient.get('amount')
             ) for ingredient in ingredients
         ])
+
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
     class Meta:

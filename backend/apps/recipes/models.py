@@ -56,7 +56,7 @@ class Recipe(models.Model):
 class IngredientsList(models.Model):
     recipe = models.ForeignKey(
         Recipe,
-        related_name='through_recipes', # changed
+        related_name='through_recipes',
         on_delete=models.CASCADE
     )
     ingredients = models.ForeignKey(
@@ -67,7 +67,7 @@ class IngredientsList(models.Model):
     amount = models.PositiveSmallIntegerField()
 
 
-class MarkedUserRecipes(models.Model):  # тут пизда в говне!
+class MarkedUserRecipes(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
