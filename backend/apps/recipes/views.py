@@ -9,9 +9,9 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from .models import MarkedUserRecipes, Recipe
-from .srializers import (CreateRecipeSerializer, RecipeSerializer,
-                         ShortRecipeSerializer)
+from .models import MarkedUserRecipe, Recipe
+from .serializers import (CreateRecipeSerializer, RecipeSerializer,
+                          ShortRecipeSerializer)
 from utils.file_creators import create_ingredients_list_pdf
 from utils.filters import RecipeFilterSet
 from utils.generalizing_functions import (check_the_occurrence,
@@ -59,7 +59,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Добавляет в нужный список выбранный рецеп, следит за наличием
         данного рецепта, в случае наличия отсылает соответсвующий ответ.
         """
-        marked_recipes, _ = MarkedUserRecipes.objects.get_or_create(
+        marked_recipes, _ = MarkedUserRecipe.objects.get_or_create(
                                                             user=request.user
                                                         )
         recipe = self.get_object()
@@ -95,7 +95,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Удаляет из нужнгого списка выбранный рецеп, следит за наличием
         данного рецепта, в случае отсутствия отсылает соответсвующий ответ.
         """
-        marked_recipes, _ = MarkedUserRecipes.objects.get_or_create(
+        marked_recipes, _ = MarkedUserRecipe.objects.get_or_create(
                                                             user=request.user
                                                         )
         recipe = self.get_object()

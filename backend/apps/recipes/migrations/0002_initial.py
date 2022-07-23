@@ -33,17 +33,17 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(blank=True, related_name='recipes', to='tags.Tag', verbose_name='Теги рецепта'),
         ),
         migrations.AddField(
-            model_name='markeduserrecipes',
+            model_name='markeduserrecipe',
             name='fovorited_recipe',
             field=models.ManyToManyField(blank=True, related_name='marked_favorited_recipes', to='recipes.Recipe', verbose_name='Понравившиеся рецепты'),
         ),
         migrations.AddField(
-            model_name='markeduserrecipes',
+            model_name='markeduserrecipe',
             name='recipe_for_download',
             field=models.ManyToManyField(blank=True, related_name='marked_download_recipes', to='recipes.Recipe', verbose_name='Рецепты для скачивания'),
         ),
         migrations.AddField(
-            model_name='markeduserrecipes',
+            model_name='markeduserrecipe',
             name='user',
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='marked_recipes', to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
         ),

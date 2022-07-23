@@ -98,8 +98,13 @@ class IngredientsList(models.Model):
     )
     amount = models.PositiveSmallIntegerField()
 
+    class Meta:
+        ordering = ('-recipe',)
+        verbose_name = 'Количество ингридиентов'
+        verbose_name_plural = 'Количество ингридиентов'
 
-class MarkedUserRecipes(models.Model):
+
+class MarkedUserRecipe(models.Model):
     """Отмеченные пользователем рецепты
     Attributes:
         user(int):
