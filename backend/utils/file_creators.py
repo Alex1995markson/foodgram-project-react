@@ -1,9 +1,8 @@
 import io
 from typing import Dict
 
-from django.conf import settings
-
 import reportlab
+from django.conf import settings
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics

@@ -1,6 +1,5 @@
 from django.conf import settings as django_settings
 from django.contrib.auth import get_user_model
-
 from djoser.conf import settings
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status

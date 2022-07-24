@@ -1,13 +1,11 @@
 from django.contrib.auth import get_user_model
-
 from djoser.conf import settings
-from djoser.serializers import (UserCreateSerializer as
-                                DjoserUserCreateSerializer)
+from djoser.serializers import \
+    UserCreateSerializer as DjoserUserCreateSerializer
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
 from recipes.models import Recipe
-
 from utils.generalizing_functions import check_the_occurrence
 
 User = get_user_model()
