@@ -154,7 +154,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                         .filter(recipe__in=shopping_cart)
                         .values_list('ingredients__name',
                                      'ingredients__measurement_unit')
-                        .annotate(amount=Sum('amount')))
+                        .annotate(count_ingredient=Sum('amount')))
         }
 
     def _send_file_response(self, ingredients: dict) -> object:
