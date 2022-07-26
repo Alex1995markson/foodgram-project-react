@@ -34,8 +34,6 @@ def check_the_occurrence(ckecked_obj: object,
     except AttributeError:
         object_for_search = obj
 
-
-
     for field in related_field.split('__'):
         if not hasattr(object_for_search, field):
             return False

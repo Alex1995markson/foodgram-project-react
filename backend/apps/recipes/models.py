@@ -143,7 +143,6 @@ class MarkedUserRecipe(models.Model):
         verbose_name = 'Отмеченый рецепт'
         verbose_name_plural = 'Отмеченные рецепты'
 
-
     def __str__(self) -> str:
         return (f'{self.id} | {self.user} | '
                 f'{self.recipe_for_download.all()[:5]} | '
