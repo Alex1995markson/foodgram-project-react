@@ -142,14 +142,7 @@ class MarkedUserRecipe(models.Model):
     class Meta:
         verbose_name = 'Отмеченый рецепт'
         verbose_name_plural = 'Отмеченные рецепты'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user',
-                        'fovorited_recipe',
-                        'recipe_for_download'),
-                name='unique_item_for_user'
-            ),
-        )
+
 
     def __str__(self) -> str:
         return (f'{self.id} | {self.user} | '

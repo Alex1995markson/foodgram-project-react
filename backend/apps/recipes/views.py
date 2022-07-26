@@ -99,7 +99,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                         )
         recipe = self.get_object()
 
-        if request.path.split('/')[-2] == 'favorite':
+        if request.resolver_match.url_name == 'recipes_api-favorite':
             if not check_the_occurrence(recipe,
                                         'fovorited_recipe',
                                         marked_recipes):

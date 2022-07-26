@@ -40,6 +40,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_is_favorited(self, obj):
+        print(obj)
         return check_the_occurrence(obj,
                                     'marked_recipes__fovorited_recipe',
                                     self)

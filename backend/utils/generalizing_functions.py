@@ -34,11 +34,12 @@ def check_the_occurrence(ckecked_obj: object,
     except AttributeError:
         object_for_search = obj
 
-    try:
-        for field in related_field.split('__'):
-            object_for_search = getattr(object_for_search, field)
-    except object_for_search.DoesNotExist:
-        return False
+
+
+    for field in related_field.split('__'):
+        if not hasattr(object_for_search, field):
+            return False
+        object_for_search = getattr(object_for_search, field)
 
     data = getattr(object_for_search, 'all')()
 
