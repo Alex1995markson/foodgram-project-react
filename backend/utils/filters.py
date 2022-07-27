@@ -75,7 +75,7 @@ class RecipeFilterSet(FilterSet):
                     id__in=favorite_recipes
                 )
             except AttributeError:
-                return queryset
+                return queryset.none()
         return queryset
 
     def check_is_in_shopping_cart(self, queryset, name, value):
@@ -90,7 +90,7 @@ class RecipeFilterSet(FilterSet):
                     id__in=recipes_for_download
                 )
             except AttributeError:
-                return queryset
+                return queryset.none()
         return queryset
 
     def is_valid(self):
