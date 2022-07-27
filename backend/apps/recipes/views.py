@@ -63,7 +63,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                         )
         recipe = self.get_object()
 
-        if request.resolver_match.url_name == 'recipes_api-favorite':
+        if request.resolver_match.url_name == 'recipes_api-mark-favorite-recipe':
             if check_the_occurrence(recipe,
                                     'fovorited_recipe',
                                     marked_recipes):
